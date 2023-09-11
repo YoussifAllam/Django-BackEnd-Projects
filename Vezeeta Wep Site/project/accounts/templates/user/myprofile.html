@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+{% include 'user/search.html' %}
+
+
+<div dir="rtl">
+
+<div class="job_details_area">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="job_details_header">
+                <div class="single_jobs white-bg d-flex justify-content-between">
+                    <div class="jobs_left d-flex align-items-center">
+                        <div >
+                            
+                            {% if user.profile.image %}
+                            <img src="{{user.profile.image.url}}" alt="" width="100" height="100">
+                            {% else %}
+                            <img src="{% static 'static_file/img/candiateds/1.png'%}" alt="" width="100" height="100">
+                            {% endif %}
+                                
+                        </div>
+                        <div class="jobs_conetent">
+                            <a href="#" ><h4>{{user.profile.name }}</h4></a>
+                            <div class="links_locat d-flex align-items-center">
+                                <div class="location">
+                                    <p> <i class="fa fa-map-marker"></i> مصر , {{user.profile.address }}</p>
+                                </div>
+                                <div class="location">
+                                    <p> <i class="fa fa-clock-o"></i>  وقت الانتظار {{user.profile.wating_time }} دقيقه</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="jobs_right">
+                        <div class="apply_now">
+                            <a class="heart_mark" href="#"> <i class="ti-heart"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="descript_wrap white-bg">
+                <div class="single_wrapp">
+                    <h3>{{user.profile.subtitle }}</h3>
+                </div>
+                <div class="white-card white-card-inner">
+                    <div class="single_wrap" style="margin-top: 10px;">
+                        <h4>معلومات عن الدكتور </h4>
+                        <p>{{user.profile.who_i }}</p>
+                        <ul>
+                            
+                        </ul>
+                    </div>
+                </div>
+                <div class="single_wrap">
+                    <h4>خدمات الدكتور :</h4>
+                    <ul>
+                        <p class="tagitem disable-click pull-left mr-4" style="background-color: #f5f5f5;
+                        color: #808184;"> {{user.profile.specialist }}
+                        </p>
+                        <p class="tagitem disable-click pull-left" style="background-color: #f5f5f5;
+                        color: #808184;">استشاري جراحه وتجميل الاسنان 
+                        </p>
+                    </ul>
+                    <br>
+                </div>
+                <div class="single_wrap">
+                    <h4>صور العيادة :</h4>
+                    <img src="img/candiateds/2.png" alt="">
+                    <img src="img/candiateds/2.png" alt="">
+                    <img src="img/candiateds/2.png" alt="">
+                    <img src="img/candiateds/2.png" alt="">
+
+                </div>
+            </div>
+            
+
+        </div>
+        <div class="col-lg-4">
+            <div class="job_sumary">
+                <div class="summery_header">
+                    <h3>معلومات عن الدكتور </h3>
+                </div>
+                <div class="job_content">
+                    <ul>
+                    
+                        <li> أنشاء فى  : <span style="color: blue;">{{user.profile.jous_time|date:'d - m - Y'}}  </span></li>
+                        <li> الكشف : <span style="color: blue;">{{user.profile.price}} جنية </span></li>
+                        <li> رقم الهاتف  : <span style="color: blue;">{{user.profile.number_phone}}</span></li>
+                        <li>عدد ساعات العمل : <span style="color: blue;">{{user.profile.working_hours}} ساعات </span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="share_wrap d-flex">
+                <span>شارك الصفحه :</span>
+                <ul>
+                    <li><a href="{{user.profile.facebook}}"> <i class="fa fa-facebook"></i></a> </li>
+                        <li><a href="{{user.profile.Google}}"> <i class="fa fa-google-plus"></i></a> </li>
+                        <li><a href="{{user.profile.twitter}}"> <i class="fa fa-twitter"></i></a> </li>
+                    <li><a href="#"> <i class="fa fa-envelope"></i></a> </li>
+                </ul>
+            </div>
+            <div class="job_location_wrap">
+                <div class="job_lok_inner">
+                    <div id="map" style="height: 200px;"></div>
+                    <script>
+                        function initMap() {
+                        var uluru = {lat: -25.363, lng: 131.044};
+                        var grayStyles = [
+                            {
+                            featureType: "all",
+                            stylers: [
+                                { saturation: -90 },
+                                { lightness: 50 }
+                            ]
+                            },
+                            {elementType: 'labels.text.fill', stylers: [{color: '#ccdee9'}]}
+                        ];
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                            center: {lat: -31.197, lng: 150.744},
+                            zoom: 9,
+                            styles: grayStyles,
+                            scrollwheel:  false
+                        });
+                        }
+                        
+                    </script>
+                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpfS1oRGreGSBU5HHjMmQ3o5NLw7VdJ6I&callback=initMap"></script>
+                    
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+<!-- link that opens popup -->
+<!-- JS here -->
+<script src="js/vendor/modernizr-3.5.0.min.js"></script>
+<script src="js/vendor/jquery-1.12.4.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/isotope.pkgd.min.js"></script>
+<script src="js/ajax-form.js"></script>
+<script src="js/waypoints.min.js"></script>
+<script src="js/jquery.counterup.min.js"></script>
+<script src="js/imagesloaded.pkgd.min.js"></script>
+<script src="js/scrollIt.js"></script>
+<script src="js/jquery.scrollUp.min.js"></script>
+<script src="js/wow.min.js"></script>
+<script src="js/nice-select.min.js"></script>
+<script src="js/jquery.slicknav.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/gijgo.min.js"></script>
+
+
+
+<!--contact js-->
+<script src="js/contact.js"></script>
+<script src="js/jquery.ajaxchimp.min.js"></script>
+<script src="js/jquery.form.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+<script src="js/mail-script.js"></script>
+
+
+<script src="js/main.js"></script>
+</body>
+
+</html>
+{% endblock body %}

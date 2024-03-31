@@ -18,7 +18,12 @@ urlpatterns = [
     # GET Car using its name
     path('get_car_by_name', views.get_car_by_name, name='get_car_by_name'),
 
+    path('Add-Car/' , views.CarCreateAPIView.as_view()  ),
 
+    path('Add-Car-photos/' , views.CarPhotoUploadView.as_view()  ),
 
+    path('remove_Car/' , views.remove_Car  ),
+
+    path('Update-Car-Info/', views.CarsInfoUpdateAPIView.as_view(), name='cars-info-update'),
 
 ]

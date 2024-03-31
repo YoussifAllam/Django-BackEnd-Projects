@@ -1,21 +1,17 @@
-from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
-from .forms import CarsInfoForm, CarPhotoFormSet  # Assuming you have a CarsInfoForm
-# from django.http.response import JsonResponse
-from .models import Cars_Info , num_of_vistors
-from .serializers import Cars_Serializer , Vistors_serializer
+from .forms import CarsInfoForm, CarPhotoFormSet  
+from .models import Cars_Info , num_of_vistors , CarPhoto
+from .serializers import Cars_Serializer , Vistors_serializer , Cars_Update_Serializer
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from rest_framework import status
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
-
-# from rest_framework.views import APIView
-# from rest_framework.authentication import BasicAuthentication , TokenAuthentication
-# from rest_framework.permissions import IsAuthenticated
 from django.http import  Http404
-# from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import permission_classes ,api_view
 
 
 class Num_of_vistors(viewsets.ModelViewSet):
@@ -66,8 +62,6 @@ def create_car_with_photos(request):
         formset = CarPhotoFormSet()
     return render(request, 'your_template.html', {'form': form, 'formset': formset})
 
-
-
 @method_decorator(never_cache, name='dispatch')
 class viewsets_GetAllCars(viewsets.ModelViewSet):
     queryset = Cars_Info.objects.all()
@@ -89,7 +83,33 @@ class viewsets_GetAllCars(viewsets.ModelViewSet):
 
         return Response(formatted_response)
 
+class CarPhotoUploadView(APIView):
+    def post(self, request):
+        # Validate that the car exists
+        car_id = request.data.get('car_id')
+        car = get_object_or_404(Cars_Info, pk=car_id)
+        
+        # Process each photo in the request
+        photos = request.FILES.getlist('photos')  # Assuming the photos are uploaded with the key 'photos'
+        if not car_id or not photos:
+            return Response({"message": "Please provide car_id and photos"}, status=status.HTTP_400_BAD_REQUEST)
+        # print('--------------' , photos)
+        for photo in photos:
+            CarPhoto.objects.create(car=car, photo=photo)
+        
+        # You might want to return the URLs of the uploaded photos or just a success message
+        return Response({
+            "status": "success",
+            "message": "Photos uploaded successfully"
+            }, status=status.HTTP_201_CREATED)
 
+class CarCreateAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = Cars_Serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def Filter_cars(request):
@@ -120,4 +140,33 @@ def Filter_cars(request):
 
     serializer = Cars_Serializer(cars, many=True, context={'request': request})
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def remove_Car(request):
+    Car_id = request.data.get('Car_id')
+    if not Car_id:
+        return Response({'error': 'Car_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    Target_Car = Cars_Info.objects.filter(id=Car_id).exists()
+    if not Target_Car :
+        return Response({'error': 'This Car not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    Target_Car = Cars_Info.objects.filter(id=Car_id).delete()
+    return Response({'message': 'Car removed successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
+class CarsInfoUpdateAPIView(APIView):
+    def put(self, request, format=None):
+        Car_id = request.data.get('Car_id')
+        if not Car_id:
+            return Response({'error': 'Car_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            car = Cars_Info.objects.get(id=Car_id)
+        except Cars_Info.DoesNotExist:
+            return Response({'error': 'Car not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = Cars_Update_Serializer(car, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

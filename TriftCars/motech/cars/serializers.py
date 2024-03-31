@@ -12,17 +12,22 @@ class Cars_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cars_Info
-        fields = ['car_code','Make' , 'Car_model_name' , 'price' , 'status','production_year' , 'mileage' 
+        fields = ['id','car_code','Make' , 'Car_model_name' , 'price' , 'status','production_year' , 'mileage' 
+                  , 'Car_Color' , 'engine_capacity' , 'Drive' , 'Cylinders_type' , 'Transmission' ,'Fuel_Type'
+                  ,'Body_styel' , 'description' , 'photos']
+
+class Cars_Update_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cars_Info
+        fields = ['id','car_code','Make' , 'Car_model_name' , 'price' , 'status','production_year' , 'mileage' 
                   , 'Car_Color' , 'engine_capacity' , 'Drive' , 'Cylinders_type' , 'Transmission' ,'Fuel_Type'
                   ,'Body_styel' , 'description' , 'photos']
 
 
-
-
-    def get_photos(self, obj):
+    ef get_photos(self, obj):
         request = self.context.get('request')
-        return [request.build_absolute_uri(photo.photo.url) for photo in obj.photos.all()]
-    
+        return [request.build_absolute_uri(photo.photo.url) for photo in obj.photos.all()]d
     
 
 class Vistors_serializer(serializers.ModelSerializer):
@@ -30,3 +35,8 @@ class Vistors_serializer(serializers.ModelSerializer):
         model = num_of_vistors
         fields = "__all__"
     
+
+class CarPhotoUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarPhoto
+        fields = ['car', 'photo']

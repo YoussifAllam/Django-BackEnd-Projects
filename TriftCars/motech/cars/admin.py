@@ -24,3 +24,12 @@ class CarsInfoAdmin(admin.ModelAdmin):
 
 admin.site.register(Cars_Info, CarsInfoAdmin)
 admin.site.unregister(Group)
+
+
+# from django.contrib import admin
+# from reversion.admin import VersionAdmin
+
+# # @admin.register(Cars_Info)
+# class YourModelAdmin(VersionAdmin):
+
+#     pass

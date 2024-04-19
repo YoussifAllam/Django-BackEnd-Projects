@@ -1,4 +1,4 @@
-from rest_framework import serializers 
+from rest_framework import serializers
 from .models import Cars_Info, CarPhoto , num_of_vistors
 
 class CarPhotoSerializer(serializers.ModelSerializer):
@@ -12,31 +12,38 @@ class Cars_Serializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cars_Info
-        fields = ['id','car_code','Make' , 'Car_model_name' , 'price' , 'status','production_year' , 'mileage' 
+        fields = ['id','car_code','Make' , 'Car_model_name' , 'price' , 'status','production_year' , 'mileage'
                   , 'Car_Color' , 'engine_capacity' , 'Drive' , 'Cylinders_type' , 'Transmission' ,'Fuel_Type'
-                  ,'Body_styel' , 'description' , 'photos']
-
-class Cars_Update_Serializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Cars_Info
-        fields = ['id','car_code','Make' , 'Car_model_name' , 'price' , 'status','production_year' , 'mileage' 
-                  , 'Car_Color' , 'engine_capacity' , 'Drive' , 'Cylinders_type' , 'Transmission' ,'Fuel_Type'
-                  ,'Body_styel' , 'description' , 'photos']
+                  ,'Body_styel' , 'description' ,'Is_Approved', 'owner_PhoneNumber' , 'uploaded_at' ,'photos']
 
 
-    ef get_photos(self, obj):
+
+
+    def get_photos(self, obj):
         request = self.context.get('request')
-        return [request.build_absolute_uri(photo.photo.url) for photo in obj.photos.all()]d
-    
+        return [request.build_absolute_uri(photo.photo.url) for photo in obj.photos.all()]
+
 
 class Vistors_serializer(serializers.ModelSerializer):
     class Meta:
         model = num_of_vistors
         fields = "__all__"
-    
+
 
 class CarPhotoUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarPhoto
         fields = ['car', 'photo']
+
+class Cars_Update_Serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cars_Info
+        fields = ['id','Make' , 'Car_model_name' , 'price' , 'status','production_year' , 'mileage'
+                  , 'Car_Color' , 'engine_capacity' , 'Drive' , 'Cylinders_type' , 'Transmission' ,'Fuel_Type'
+                  ,'Body_styel' , 'description' ,'Is_Approved', 'owner_PhoneNumber' ]
+
+
+    def get_photos(self, obj):
+        request = self.context.get('request')
+        return [request.build_absolute_uri(photo.photo.url) for photo in obj.photos.all()]

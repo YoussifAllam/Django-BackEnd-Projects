@@ -1,4 +1,4 @@
-from .models import User , Video, FavoriteVideos
+from .models import User # , Video, FavoriteVideos
 from rest_framework import serializers
 from django.db import IntegrityError
 from rest_framework.response import Response
@@ -9,15 +9,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 
-class VideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Video
-        fields = '__all__'
+# class VideoSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Video
+#         fields = '__all__'
 
-class FavoriteVideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FavoriteVideos
-        fields = '__all__'
+# class FavoriteVideoSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = FavoriteVideos
+#         fields = ['video']
 
 class SingUpSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False)
